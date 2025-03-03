@@ -1,6 +1,8 @@
 services:
   app-prod:
     image: bolt-ai:production
+    hostname: boltdiy
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile
@@ -32,9 +34,12 @@ services:
     command: pnpm run dockerstart
     profiles:
       - production
+    networks:
+      - mynetwork
 
   app-dev:
     image: bolt-ai:development
+    restart: always
     build:
       target: bolt-ai-development
     env_file: '.env.local'
@@ -72,9 +77,12 @@ services:
       - '5173:5173'
     command: pnpm run dev --host 0.0.0.0
     profiles: ['development', 'default']
+    networks:
+      - mynetwork
 
   app-prebuild:
     image: ghcr.io/stackblitz-labs/bolt.diy:latest
+    restart: always
     ports:
       - '5173:5173'
     environment:
@@ -90,3 +98,9 @@ services:
     command: pnpm run dockerstart
     profiles:
       - prebuilt
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
