@@ -2,7 +2,7 @@ services:
   app-prod:
     image: bolt-ai:production
     hostname: boltdiy
-    restart: always
+    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile
@@ -39,7 +39,8 @@ services:
 
   app-dev:
     image: bolt-ai:development
-    restart: always
+    hostname: boltdiy-dev
+    restart: unless-stopped
     build:
       target: bolt-ai-development
     env_file: '.env.local'
@@ -82,7 +83,6 @@ services:
 
   app-prebuild:
     image: ghcr.io/stackblitz-labs/bolt.diy:latest
-    restart: always
     ports:
       - '5173:5173'
     environment:
